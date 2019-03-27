@@ -1,0 +1,11 @@
+{
+  "name": "api",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "env $(cat .env | grep -v \"^#\") nodemon --ext js,graphql --watch src --exec babel-node -- src"
+  },
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
