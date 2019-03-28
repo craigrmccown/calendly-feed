@@ -45,7 +45,17 @@ ngrok.connect(parseInt(PORT, 10)).then(async url => {
     context: ({ connection }) => (connection ? connection.context : {}),
   })
 
-  app.get('/', (req, res) => res.send('Hello World!'))
+  app.use(express.json())
+
+  app.post('/invitee-events', ({ body }) => {
+    // eslint-disable-next-line no-console
+    console.info(`Received webhook request: ${body.event}`)
+
+    return pubsub.publish(
+      body.event === 'invitee.created' ? 'INVITEE_CREATED' : 'INVITEE_CANCELED',
+      body,
+    )
+  })
 
   apollo.applyMiddleware({ app, path: '/graphql' })
   apollo.installSubscriptionHandlers(server)
@@ -59,7 +69,7 @@ ngrok.connect(parseInt(PORT, 10)).then(async url => {
 
     calendly.initialize({ context: {} }, undefined)
     await calendly.deleteWebhookSubscriptions()
-    await calendly.createWebhookSubscription(`${url}/invites`)
+    await calendly.createWebhookSubscription(`${url}/invitee-events`)
 
     // eslint-disable-next-line no-console
     console.info('Calendly webhook subscriptions are cleaned!')
