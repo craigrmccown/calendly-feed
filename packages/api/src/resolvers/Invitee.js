@@ -1,3 +1,8 @@
+const Query = {
+  // NOTE: This query should be implemented with pagination and requires persistence
+  inviteeEvents: () => [],
+}
+
 const Subscription = {
   inviteeEvents: {
     subscribe: (rootValue, args, { pubsub }) =>
@@ -38,4 +43,4 @@ const Subscription = {
   },
 }
 
-export default { Subscription }
+export default { Query, Subscription }

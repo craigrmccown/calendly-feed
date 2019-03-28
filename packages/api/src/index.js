@@ -47,14 +47,13 @@ ngrok.connect(parseInt(PORT, 10)).then(async url => {
 
   app.use(express.json())
 
-  app.post('/invitee-events', ({ body }) => {
+  app.post('/invitee-events', ({ body }, res) => {
     // eslint-disable-next-line no-console
     console.info(`Received webhook request: ${body.event}`)
 
-    return pubsub.publish(
-      body.event === 'invitee.created' ? 'INVITEE_CREATED' : 'INVITEE_CANCELED',
-      body,
-    )
+    pubsub.publish(body.event === 'invitee.created' ? 'INVITEE_CREATED' : 'INVITEE_CANCELED', body)
+
+    res.json({ ok: true })
   })
 
   apollo.applyMiddleware({ app, path: '/graphql' })

@@ -10,10 +10,12 @@ import fetch from 'isomorphic-unfetch'
 const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors)
     graphQLErrors.map(({ message, locations, path }) =>
+      // eslint-disable-next-line no-console
       console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`),
     )
 
-  if (networkError) console.log(`[Network error asdf]: ${networkError}`)
+  // eslint-disable-next-line no-console
+  if (networkError) console.log(`[Network error]: ${networkError}`)
 })
 
 if (!global.fetch) {

@@ -5,21 +5,32 @@ import styled, { css } from 'styled-components'
 
 import Layout from '../Layout'
 
+const Container = styled(Layout).attrs({ direction: 'row', alignY: 'center', alignX: 'right' })`
+  background: #393034;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 0.5rem;
+  border-bottom: 1px solid #e3e3e3;
+`
+
 const Avatar = styled(Layout).attrs({ alignX: 'center', alignY: 'center' })`
-  width: 60px;
-  height: 60px;
+  width: 50px;
+  height: 50px;
+  margin: 0 0.5rem;
   border-radius: 50%;
-  border: 2px solid darkgray;
-  color: darkgray;
-  font-weight: 700;
-  font-size: 40px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.7);
+  font-size: 20px;
   ${props =>
     props.url == null
       ? css`
-          background: lightgray;
+          background: #393034;
           content: '?';
         `
       : css`background-image: url("${props.url}")`}
+`
+
+const NameContainer = styled(Layout).attrs({ direction: 'column', alignY: 'center' })`
+  margin: 0 0.5rem;
 `
 
 const ME_QUERY = gql`
@@ -45,13 +56,13 @@ const Header = () => {
         } = data
 
         return (
-          <Layout direction="row" alignY="center" alignX="right">
+          <Container>
             <Avatar url={avatarUrl}>{avatarUrl == null && <span>?</span>}</Avatar>
-            <Layout direction="column" alignX="left" alignY="center">
-              <span>{name}</span>
-              <span>{email}</span>
-            </Layout>
-          </Layout>
+            <NameContainer>
+              <p>{name}</p>
+              <p>{email}</p>
+            </NameContainer>
+          </Container>
         )
       }}
     </Query>

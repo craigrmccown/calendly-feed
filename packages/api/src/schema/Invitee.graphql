@@ -32,6 +32,10 @@ type InviteeEvent {
   cancellation: Cancellation
 }
 
+extend type Query {
+  inviteeEvents: [InviteeEvent!]!
+}
+
 extend type Subscription {
   inviteeEvents: InviteeEvent!
 }

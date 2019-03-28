@@ -32,6 +32,7 @@
     "react-apollo": "^2.5.3",
     "react-dom": "^16.8.5",
     "styled-components": "^4.2.0",
+    "styled-normalize": "^8.0.6",
     "subscriptions-transport-ws": "^0.9.16",
     "ws": "^6.2.1"
   }

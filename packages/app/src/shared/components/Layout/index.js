@@ -10,14 +10,14 @@ const Layout = styled.div`
     getAlignmentCSS({
       flexDirection: props.direction,
       alignmentDirection: 'horizontal',
-      alignment: props.alignX,
+      alignment: props.alignX || 'left',
     })}
   ${props =>
     props.alignY &&
     getAlignmentCSS({
       flexDirection: props.direction,
       alignmentDirection: 'vertical',
-      alignment: props.alignY,
+      alignment: props.alignY || 'top',
     })}
 `
 
