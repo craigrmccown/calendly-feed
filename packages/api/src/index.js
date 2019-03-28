@@ -19,7 +19,7 @@ if (PORT == null || CALENDLY_API_TOKEN == null) {
  * when NODE_ENV !== 'production'. Furthermore, the proxy should run as a separate process so that
  * it does not restart every time a file is changed.
  */
-ngrok.connect(PORT).then(async url => {
+ngrok.connect(parseInt(PORT, 10)).then(async url => {
   const typeDefs = gql`
     ${await concatFiles(path.join(__dirname, './schema'))}
   `
