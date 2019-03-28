@@ -1,26 +1,35 @@
+type Event {
+  startTime: String!
+  endTime: String!
+  createdAt: String!
+  location: String
+}
+
+type EventType {
+  kind: String!
+  name: String!
+  duration: Int!
+}
+
 type Invitee {
   id: ID!
   name: String!
   email: String!
-  phoneNumber: String!
+  phoneNumber: String
 }
 
-type InviteeCancellation {
+type Cancellation {
   cancelerName: String!
   cancelReason: String
   canceledAt: String!
 }
 
 type InviteeEvent {
-  event: String!
-  kind: String!
-  name: String!
-  duration: Int!
-  startTime: String!
-  endTime: String!
-  createdAt: String!
-  location: String
-  cancellation: InviteeCancellation
+  actionType: String!
+  event: Event!
+  eventType: EventType!
+  invitee: Invitee!
+  cancellation: Cancellation
 }
 
 extend type Subscription {
