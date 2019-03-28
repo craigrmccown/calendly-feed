@@ -1,7 +1,9 @@
 import express from 'express'
 import ngrok from 'ngrok'
-import { ApolloServer, gql } from 'apollo-server-express'
 import path from 'path'
+import { createServer } from 'http'
+import { ApolloServer, gql } from 'apollo-server-express'
+import { PubSub } from 'apollo-server'
 
 import concatFiles from './services/concatFiles'
 import resolvers from './resolvers'
@@ -22,28 +24,46 @@ const calendly = new Calendly(CALENDLY_API_TOKEN)
  * it does not restart every time a file is changed.
  */
 ngrok.connect(parseInt(PORT, 10)).then(async url => {
-  calendly.initialize({ context: {} }, undefined)
+  const app = express()
+  const server = createServer(app)
+  const pubsub = new PubSub()
 
-  await calendly.deleteWebhookSubscriptions()
-  await calendly.createWebhookSubscription(`${url}/invites`)
+  app.set('PORT', PORT)
+  app.set('WEBHOOK_URL', url)
+  app.set('APOLLO_PUBSUB', pubsub)
 
   const typeDefs = gql`
     ${await concatFiles(path.join(__dirname, './schema'))}
   `
-  const apollo = new ApolloServer({ typeDefs, resolvers, dataSources: () => ({ calendly }) })
-  const app = express()
-
-  app.set('PORT', PORT)
-  app.set('WEBHOOK_URL', url)
+  const apollo = new ApolloServer({
+    typeDefs,
+    resolvers,
+    dataSources: () => ({ calendly }),
+    subscriptions: {
+      onConnect: () => ({ pubsub }),
+    },
+    context: ({ connection }) => (connection ? connection.context : {}),
+  })
 
   app.get('/', (req, res) => res.send('Hello World!'))
 
   apollo.applyMiddleware({ app, path: '/graphql' })
+  apollo.installSubscriptionHandlers(server)
 
-  app.listen(app.get('PORT'), () =>
+  server.listen(app.get('PORT'), async () => {
     // eslint-disable-next-line no-console
-    console.info(`Listening on port ${app.get('PORT')}, available at ${app.get('WEBHOOK_URL')}!`),
-  )
+    console.info(`Listening on port ${app.get('PORT')}, available at ${app.get('WEBHOOK_URL')}!`)
+
+    // eslint-disable-next-line no-console
+    console.info('Cleaning up active Calendly webhook subscriptions...')
+
+    calendly.initialize({ context: {} }, undefined)
+    await calendly.deleteWebhookSubscriptions()
+    await calendly.createWebhookSubscription(`${url}/invites`)
+
+    // eslint-disable-next-line no-console
+    console.info('Calendly webhook subscriptions are cleaned!')
+  })
 })
 
 process.on('SIGTERM', async () => {

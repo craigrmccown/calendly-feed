@@ -1,0 +1,28 @@
+type Invitee {
+  id: ID!
+  name: String!
+  email: String!
+  phoneNumber: String!
+}
+
+type InviteeCancellation {
+  cancelerName: String!
+  cancelReason: String
+  canceledAt: String!
+}
+
+type InviteeEvent {
+  event: String!
+  kind: String!
+  name: String!
+  duration: Int!
+  startTime: String!
+  endTime: String!
+  createdAt: String!
+  location: String
+  cancellation: InviteeCancellation
+}
+
+extend type Subscription {
+  inviteeEvents: InviteeEvent!
+}

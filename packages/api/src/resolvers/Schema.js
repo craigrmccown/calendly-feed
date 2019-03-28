@@ -2,4 +2,8 @@ const Query = {
   hello: () => 'Hello, world!',
 }
 
-export default { Query }
+const Subscription = {
+  hello: (rootValue, args, { pubsub }) => pubsub.asyncIterator('HELLO'),
+}
+
+export default { Query, Subscription }
