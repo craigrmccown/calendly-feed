@@ -1,10 +1,20 @@
 import express from 'express'
 import ngrok from 'ngrok'
+import { ApolloServer, gql } from 'apollo-server-express'
+import path from 'path'
+
+import concatFiles from './services/concatFiles'
 
 const { PORT } = process.env
 
 if (PORT == null) {
   throw new Error('Environment variable PORT must be set!')
+}
+
+const resolvers = {
+  Query: {
+    hello: () => 'Hello, world!',
+  },
 }
 
 /**
@@ -13,13 +23,20 @@ if (PORT == null) {
  * when NODE_ENV !== 'production'. Furthermore, the proxy should run as a separate process so that
  * it does not restart every time a file is changed.
  */
-ngrok.connect(PORT).then(url => {
+ngrok.connect(PORT).then(async url => {
+  const typeDefs = gql`
+    ${await concatFiles(path.join(__dirname, './schema'))}
+  `
+
+  const apollo = new ApolloServer({ typeDefs, resolvers })
   const app = express()
 
   app.set('PORT', PORT)
   app.set('WEBHOOK_URL', url)
 
   app.get('/', (req, res) => res.send('Hello World!'))
+
+  apollo.applyMiddleware({ app, path: '/graphql' })
 
   app.listen(app.get('PORT'), () =>
     // eslint-disable-next-line no-console
