@@ -6,6 +6,7 @@
     "dev": "env $(cat .env | grep -v \"^#\") nodemon --ext js,graphql --watch src --exec babel-node -- src"
   },
   "dependencies": {
+    "apollo-datasource-rest": "^0.3.2",
     "apollo-server": "^2.4.8",
     "apollo-server-express": "^2.4.8",
     "express": "^4.16.4",

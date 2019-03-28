@@ -4,11 +4,12 @@ import { ApolloServer, gql } from 'apollo-server-express'
 import path from 'path'
 
 import concatFiles from './services/concatFiles'
+import Calendly from './services/calendly'
 
-const { PORT } = process.env
+const { PORT, CALENDLY_API_TOKEN } = process.env
 
-if (PORT == null) {
-  throw new Error('Environment variable PORT must be set!')
+if (PORT == null || CALENDLY_API_TOKEN == null) {
+  throw new Error('Environment variables PORT and CALENDLY_API_TOKEN must be set!')
 }
 
 const resolvers = {
@@ -27,8 +28,9 @@ ngrok.connect(PORT).then(async url => {
   const typeDefs = gql`
     ${await concatFiles(path.join(__dirname, './schema'))}
   `
+  const dataSources = () => ({ calendly: new Calendly(CALENDLY_API_TOKEN) })
 
-  const apollo = new ApolloServer({ typeDefs, resolvers })
+  const apollo = new ApolloServer({ typeDefs, resolvers, dataSources })
   const app = express()
 
   app.set('PORT', PORT)
