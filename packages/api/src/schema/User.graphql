@@ -1,0 +1,9 @@
+type User {
+  name: String!
+  email: String!
+  avatarUrl: String
+}
+
+extend type Query {
+  me: User!
+}

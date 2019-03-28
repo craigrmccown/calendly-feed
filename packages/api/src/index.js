@@ -4,18 +4,13 @@ import { ApolloServer, gql } from 'apollo-server-express'
 import path from 'path'
 
 import concatFiles from './services/concatFiles'
+import resolvers from './resolvers'
 import Calendly from './services/calendly'
 
 const { PORT, CALENDLY_API_TOKEN } = process.env
 
 if (PORT == null || CALENDLY_API_TOKEN == null) {
   throw new Error('Environment variables PORT and CALENDLY_API_TOKEN must be set!')
-}
-
-const resolvers = {
-  Query: {
-    hello: () => 'Hello, world!',
-  },
 }
 
 /**
