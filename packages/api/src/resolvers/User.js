@@ -1,6 +1,7 @@
 const Query = {
   me: (rootValue, args, { dataSources: { calendly } }) =>
-    calendly.getUser().then(({ data: { attributes: { name, email, avatar: { url } } } }) => ({
+    calendly.getUser().then(({ data: { id, attributes: { name, email, avatar: { url } } } }) => ({
+      id,
       name,
       email,
       avatarUrl: url,
