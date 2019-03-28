@@ -6,6 +6,7 @@ import PromiseRouter from 'express-promise-router'
 import { html } from 'common-tags'
 import { ServerStyleSheet } from 'styled-components'
 import { ApolloProvider, renderToStringWithData } from 'react-apollo'
+import ws from 'ws'
 
 import App from '../shared/App'
 import ServerEnv from './services/Env'
@@ -18,7 +19,7 @@ const router = new PromiseRouter()
 
 router.get('*', async (req, res) => {
   const sheet = new ServerStyleSheet()
-  const client = createApolloClient({ uri: API_URL, ssrMode: true })
+  const client = createApolloClient({ uri: API_URL, ws, ssrMode: true })
   const appHtml = await renderToStringWithData(
     sheet.collectStyles(
       <ApolloProvider client={client}>

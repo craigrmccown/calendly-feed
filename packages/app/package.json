@@ -20,6 +20,8 @@
     "apollo-link": "^1.2.11",
     "apollo-link-error": "^1.1.10",
     "apollo-link-http": "^1.5.14",
+    "apollo-link-ws": "^1.0.17",
+    "apollo-utilities": "^1.2.1",
     "common-tags": "^1.8.0",
     "express": "^4.16.4",
     "express-promise-router": "^3.0.3",
@@ -29,6 +31,8 @@
     "react": "^16.8.5",
     "react-apollo": "^2.5.3",
     "react-dom": "^16.8.5",
-    "styled-components": "^4.2.0"
+    "styled-components": "^4.2.0",
+    "subscriptions-transport-ws": "^0.9.16",
+    "ws": "^6.2.1"
   }
 }
